@@ -15,10 +15,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReglementVendeurController;
 use App\Http\Controllers\ReglementClientController;
 use App\Http\Controllers\DetailBonEntreController;
+
 // Route pour afficher la liste des règlements
 
 Route::middleware(['auth'])->group(function () {
 Route::post('/detail_bon_entre', 'DetailBonEntreController@store')->name('detail_bon_entre.store');
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 Route::get('reglements', [ReglementClientController::class, 'index'])->name('reglements.index');
 
@@ -171,9 +173,11 @@ Route::get('/produits/{produit}', [ProduitController::class, 'show'])->name('pro
 */
 
 
+
 Route::get('/home', function () {
     return view('dashboard.index');
-});});
+})->name('dashboard.index');;});
+
 Route::get('/', function () {
     return view('welcome');
 });

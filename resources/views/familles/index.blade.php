@@ -6,21 +6,19 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h1>Liste des Familles</h1></br>
-                        {{-- <button>
-                            <a href="{{ route('familles.create') }}" class="btn btn-primary btn-sm float-right">Ajouter Famille</a>
-                        </button> --}}
-                        
-                       </div>
+                        <h1>Liste des Familles</h1>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ route('familles.create') }}" class="btn btn-primary mb-3">Ajouter Famille</a>
+                      
                        
                     <div class="card-body">
-                        {{-- @if (session('success'))
+                         @if (session('success'))
                             <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif --}}
+                        @endif 
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Famille</th>
                                     <th>Actions</th>
                                 </tr>
@@ -28,7 +26,6 @@
                             <tbody>
                                 @foreach ($familles as $famille)
                                     <tr>
-                                        <td>{{ $famille->id }}</td>
                                         <td>{{ $famille->famille }}</td>
                                         <td>
                                             <a href="{{ route('familles.edit', $famille->id) }}" class="btn btn-primary btn-sm">Modifier</a>

@@ -1,155 +1,246 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-lg main-navbar">
-            <form class="form-inline mr-auto">
-                <ul class="navbar-nav mr-3">
-                    <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
-                    <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
-                </ul>
-                <div class="search-element">
-                    <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
-                    <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-                    <div class="search-backdrop"></div>
-                    <div class="search-result">
-                        <div class="search-header">Histories</div>
-                        <div class="search-item">
-                            <a href="#">How to Use HTML in Laravel</a>
-                            <a href="#" class="search-close"><i class="fas fa-times"></i></a>
-                        </div>
-                        <div class="search-item">
-                            <a href="https://themeforest.net/user/admincraft/portfolio" target="_blank">Admincraft Portfolio</a>
-                            <a href="#" class="search-close"><i class="fas fa-times"></i></a>
-                        </div>
-                        <div class="search-item">
-                            <a href="#">#CodiePie</a>
-                            <a href="#" class="search-close"><i class="fas fa-times"></i></a>
-                        </div>
-                        <div class="search-header">Result</div>
-                        <div class="search-item">
-                            <a href="#">
-                                <img class="mr-3 rounded" width="30" src="assets/img/products/product-3-50.png" alt="product">
-                                oPhone 11 Pro
-                            </a>
-                        </div>
-                        <div class="search-item">
-                            <a href="#">
-                                <img class="mr-3 rounded" width="30" src="assets/img/products/product-2-50.png" alt="product">
-                                Drone Zx New Gen-3
-                            </a>
-                        </div>
-                        <div class="search-item">
-                            <a href="#">
-                                <img class="mr-3 rounded" width="30" src="assets/img/products/product-1-50.png" alt="product">
-                                Headphone JBL
-                            </a>
-                        </div>
-                        <div class="search-header">Projects</div>
-                        <div class="search-item">
-                            <a href="https://themeforest.net/item/epice-laravel-admin-template-for-hr-project-management/24466729" target="_blank">
-                                <div class="search-icon bg-danger text-white mr-3"><i class="fas fa-code"></i></div>
-                                Epice Laravel - Admin Template
-                            </a>
-                        </div>
-                        <div class="search-item">
-                            <a href="https://themeforest.net/item/soccer-project-management-admin-template-ui-kit/24646866" target="_blank">
-                                <div class="search-icon bg-primary text-white mr-3"><i class="fas fa-laptop"></i></div>
-                                Soccer - Admin Template
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <ul class="navbar-nav navbar-right">
-                <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
-                    <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                        <div class="dropdown-header">Messages
-                            <div class="float-right">
-                                <a href="#">Mark All As Read</a>
-                            </div>
-                        </div>
-                        <div class="dropdown-list-content dropdown-list-message">
-                            <a href="#" class="dropdown-item dropdown-item-unread">
-                                <div class="dropdown-item-avatar">
-                                    <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle">
-                                    <div class="is-online"></div>
-                                </div>
-                                
-                            </a>
-                            <a href="#" class="dropdown-item dropdown-item-unread">
-                                <div class="dropdown-item-avatar">
-                                    <img alt="image" src="assets/img/avatar/avatar-2.png" class="rounded-circle">
-                                </div>
-                                <div class="dropdown-item-desc">
-                                    <b>Dedik Sugiharto</b>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                                    <div class="time">12 Hours Ago</div>
-                                </div>
-                            </a>
-                            <a href="#" class="dropdown-item dropdown-item-unread">
-                                <div class="dropdown-item-avatar">
-                                    <img alt="image" src="assets/img/avatar/avatar-3.png" class="rounded-circle">
-                                    <div class="is-online"></div>
-                                </div>
-                               
-                            </a>
-                        </div>
-                        <div class="dropdown-footer text-center">
-                            <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-                        </div>
-                    </div>
-                </li>
-               
-                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                        <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                        @guest
-                            <span>{{ __('Guest') }}</span>
-                        @else
-                            <span>{{ Auth::user()->name }}</span>
-                        @endguest
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        @guest
-                            @if (Route::has('login'))
-                                <a class="dropdown-item" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            @endif
-                            @if (Route::has('register'))
-                                <a class="dropdown-item" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            @endif
-                        @else
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        @endguest
-                    </div>
-                </li>
-            </ul>
-        </nav>
+     <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+<div class="d-flex align-items-center justify-content-between">
+  <a href="index.html" class="logo d-flex align-items-center">
+    <img src="assets/img/logo.png" alt="">
+    <span class="d-none d-lg-block">NiceAdmin</span>
+  </a>
+  <i class="bi bi-list toggle-sidebar-btn"></i>
+</div><!-- End Logo -->
+
+<div class="search-bar">
+  <form class="search-form d-flex align-items-center" method="POST" action="#">
+    <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+  </form>
+</div><!-- End Search Bar -->
+
+<nav class="header-nav ms-auto">
+  <ul class="d-flex align-items-center">
+
+    <li class="nav-item d-block d-lg-none">
+      <a class="nav-link nav-icon search-bar-toggle " href="#">
+        <i class="bi bi-search"></i>
+      </a>
+    </li><!-- End Search Icon-->
+
+    <li class="nav-item dropdown">
+
+      <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+        <i class="bi bi-bell"></i>
+        <span class="badge bg-primary badge-number">4</span>
+      </a><!-- End Notification Icon -->
+
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+          You have 4 new notifications
+          <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+          <i class="bi bi-exclamation-circle text-warning"></i>
+          <div>
+            <h4>Lorem Ipsum</h4>
+            <p>Quae dolorem earum veritatis oditseno</p>
+            <p>30 min. ago</p>
+          </div>
+        </li>
+
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+          <i class="bi bi-x-circle text-danger"></i>
+          <div>
+            <h4>Atque rerum nesciunt</h4>
+            <p>Quae dolorem earum veritatis oditseno</p>
+            <p>1 hr. ago</p>
+          </div>
+        </li>
+
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+          <i class="bi bi-check-circle text-success"></i>
+          <div>
+            <h4>Sit rerum fuga</h4>
+            <p>Quae dolorem earum veritatis oditseno</p>
+            <p>2 hrs. ago</p>
+          </div>
+        </li>
+
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+          <i class="bi bi-info-circle text-primary"></i>
+          <div>
+            <h4>Dicta reprehenderit</h4>
+            <p>Quae dolorem earum veritatis oditseno</p>
+            <p>4 hrs. ago</p>
+          </div>
+        </li>
+
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+          <a href="#">Show all notifications</a>
+        </li>
+
+      </ul><!-- End Notification Dropdown Items -->
+
+    </li><!-- End Notification Nav -->
+
+    <li class="nav-item dropdown">
+
+      <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+        <i class="bi bi-chat-left-text"></i>
+        <span class="badge bg-success badge-number">3</span>
+      </a><!-- End Messages Icon -->
+
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+        <li class="dropdown-header">
+          You have 3 new messages
+          <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="message-item">
+          <a href="#">
+            <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
+            <div>
+              <h4>Maria Hudson</h4>
+              <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+              <p>4 hrs. ago</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="message-item">
+          <a href="#">
+            <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
+            <div>
+              <h4>Anna Nelson</h4>
+              <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+              <p>6 hrs. ago</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="message-item">
+          <a href="#">
+            <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
+            <div>
+              <h4>David Muldon</h4>
+              <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+              <p>8 hrs. ago</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li class="dropdown-footer">
+          <a href="#">Show all messages</a>
+        </li>
+
+      </ul><!-- End Messages Dropdown Items -->
+
+    </li><!-- End Messages Nav -->
+
+    <li class="nav-item dropdown pe-3">
+
+      <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+        @guest
+            <span>{{ __('Guest') }}</span>
+         @else
+        <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
+        @endguest
+      </a><!-- End Profile Iamge Icon -->
+
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+        <li class="dropdown-header">
+          <h6>{{ Auth::user()->name }}</h6>
+          <span>{{ Auth::user()->email }}</span>
+          
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+            <i class="bi bi-person"></i>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+            <i class="bi bi-gear"></i>
+            <span>Account Settings</span>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+            <i class="bi bi-question-circle"></i>
+            <span>Need Help?</span>
+          </a>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+   <form method="POST" action="{{ route('logout') }}">
+      @csrf
+      <button type="submit" class="dropdown-item d-flex align-items-center">
+         <i class="bi bi-box-arrow-right"></i>
+         <span>Sign Out</span>
+      </button>
+   </form>
+</li>
 
         
-    </div>
+      </ul><!-- End Profile Dropdown Items -->
+    </li><!-- End Profile Nav -->
+
+  </ul>
+</nav><!-- End Icons Navigation -->
+
+</header><!-- End Header --> 
 </body>
 </html>

@@ -1,13 +1,16 @@
 @extends('layouts.app')
+
 @section('content')
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h1>Liste des Produits</h1></br>
-                        {{-- <button><a href="{{ route('produits.create') }}" class="btn btn-primary btn-sm float-right">Ajouter Produit</a></button>--}}
-                    </div> 
+                        <h1>Liste des Produits</h1>
+                        </div>
+                    <div class="card-body">
+                        <a href="{{ route('produits.create') }}" class="btn btn-primary mb-3">Ajouter Produit</a>
+                      
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success">{{ session('success') }}</div>
@@ -15,7 +18,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Désignation</th>
                                     <th>IMAGE DE produit</th>
                                     <th>Actions</th>
@@ -24,7 +26,7 @@
                             <tbody>
                                 @foreach ($produits as $produit)
                                     <tr>
-                                        <td>{{ $produit->id }}</td>
+                                       
                                         <td>{{ $produit->designation }}</td>
                                         <td>
                                             @if ($produit->image)

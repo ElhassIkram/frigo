@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    
 <div class="row">
     <div class="col-lg-4 col-md-4 col-sm-12">
         <div class="card card-statistic-2">
