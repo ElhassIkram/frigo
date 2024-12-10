@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Produit;
 use App\Models\Famille;
@@ -21,24 +21,53 @@ class ProduitController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'designation' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation de l'image
-            'famille_id' => 'required|exists:familles,id',
-        ]);
+{
+    // Validation des données
+    $request->validate([
+        'designation' => 'required|string',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
+        'famille_id' => 'required|exists:familles,id',
+    ]);
 
-        $validatedData = $request->only('designation', 'famille_id');
+    // Récupérer les données validées sauf l'image
+    $validatedData = $request->only('designation', 'famille_id');
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $validatedData['image'] = $imagePath;
+    // Vérifier si une image est téléchargée
+    if ($request->hasFile('image')) {
+        // Récupérer l'image
+        $image = $request->file('image');
+
+        // Créer un chemin de stockage pour l'image
+        $imagePath = 'images/' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+        // Créer le dossier s'il n'existe pas
+        $imageDirectory = public_path('storage/images');
+        if (!file_exists($imageDirectory)) {
+            mkdir($imageDirectory, 0755, true); // Crée le dossier si nécessaire
         }
 
-        Produit::create($validatedData);
+        // Charger l'image
+        $img = Image::make($image);
 
-        return redirect()->route('produits.index')->with('success', 'Produit ajouté avec succès.');
+        // Créer une image carrée de 300x300 avec un fond blanc
+        $img->fit(650, 350, function ($constraint) {
+            $constraint->upsize(); // Permet d'agrandir les petites images
+        });
+
+        // Sauvegarder l'image dans le dossier 'public/images'
+        $img->save(public_path('storage/' . $imagePath));
+
+        // Ajouter le chemin de l'image redimensionnée à l'array des données validées
+        $validatedData['image'] = $imagePath;
     }
+
+    // Créer un nouveau produit avec les données validées
+    Produit::create($validatedData);
+
+    // Rediriger avec un message de succès
+    return redirect()->route('produits.index')->with('success', 'Produit ajouté avec succès.');
+}
+
 
     public function show(Produit $produit)
     {
@@ -65,8 +94,12 @@ class ProduitController extends Controller
 
     public function destroy(Produit $produit)
     {
-        $produit->delete();
+       try{ $produit->delete();
 
         return redirect()->route('produits.index')->with('success', 'Produit supprimé avec succès.');
     }
+    catch (\Exception $e) {
+        return redirect()->route('produits.index')->with('error', 'Erreur lors de la suppression.');
+    }
+}
 }

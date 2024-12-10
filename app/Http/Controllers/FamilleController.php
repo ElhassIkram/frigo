@@ -24,13 +24,14 @@ class FamilleController extends Controller
         return redirect()->route('familles.index')->with('success', 'Famille ajoutée avec succès.');
     }
 
-    public function edit(Famille $famille)
-    {
-        return view('familles.edit', compact('famille'));
-    }
+    
     public function show(Famille $famille)
     {
         return view('familles.show', compact('famille'));
+    }
+    public function edit(Famille $famille)
+    {
+        return view('familles.edit', compact('famille'));
     }
     public function update(Request $request, Famille $famille)
     {
@@ -45,7 +46,11 @@ class FamilleController extends Controller
 
     public function destroy(Famille $famille)
     {
-        $famille->delete();
+       try{ $famille->delete();
         return redirect()->route('familles.index')->with('success', 'Famille supprimée avec succès.');
     }
+    catch (\Exception $e) {
+        return redirect()->route('familles.index')->with('error', 'Erreur lors de la suppression.');
+    }
+}
 }

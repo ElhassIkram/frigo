@@ -13,9 +13,9 @@
                       
                        
                     <div class="card-body">
-                         @if (session('success'))
+                         <!-- @if (session('success'))
                             <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif 
+                        @endif  -->
                         <table class="table">
                             <thead>
                                 <tr>
@@ -28,13 +28,16 @@
                                     <tr>
                                         <td>{{ $famille->famille }}</td>
                                         <td>
-                                            <a href="{{ route('familles.edit', $famille->id) }}" class="btn btn-primary btn-sm">Modifier</a>
-                                            <a href="{{ route('familles.show', $famille->id) }}" class="btn btn-primary btn-sm">voir</a>
+                                            <!-- Icône Modifier (en vert) -->
+                                            <a href="{{ route('familles.edit', $famille->id) }}" class="btn btn-sm btn-success" title="Modifier">
+                                                <i class="fa fa-edit"></i>
+                                            </a> 
+                                            <!-- <a href="{{ route('familles.show', $famille->id) }}" class="btn btn-primary btn-sm">voir</a> -->
                                            
                                             <form action="{{ route('familles.destroy', $famille->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette famille ?')">Supprimer</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette famille ?')"> <i class="fa fa-trash"></i></button>
                                             </form>
                                         </td>
                                     </tr>
