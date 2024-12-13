@@ -16,7 +16,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Image de Produit</th>
+                                    <th></th>
                                     <th>Désignation</th>
                                     <th>Actions</th>
                                 </tr>

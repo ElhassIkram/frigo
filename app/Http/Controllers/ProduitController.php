@@ -79,18 +79,59 @@ class ProduitController extends Controller
         $familles = Famille::all();
         return view('produits.edit', compact('produit', 'familles'));
     }
-
     public function update(Request $request, Produit $produit)
     {
+        // Validation des données
         $request->validate([
             'designation' => 'required|string',
             'famille_id' => 'required|exists:familles,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Image est optionnelle
         ]);
-
-        $produit->update($request->only('designation', 'famille_id'));
-
+    
+        // Mettre à jour les informations du produit (sans l'image pour le moment)
+        $validatedData = $request->only('designation', 'famille_id');
+    
+        // Vérifier si une nouvelle image est téléchargée
+        if ($request->hasFile('image')) {
+            // Récupérer l'image téléchargée
+            $image = $request->file('image');
+    
+            // Créer un chemin pour la nouvelle image
+            $imagePath = 'images/' . uniqid() . '.' . $image->getClientOriginalExtension();
+    
+            // Créer le dossier s'il n'existe pas
+            $imageDirectory = public_path('storage/images');
+            if (!file_exists($imageDirectory)) {
+                mkdir($imageDirectory, 0755, true); // Créer le dossier si nécessaire
+            }
+    
+            // Charger l'image avec Intervention Image
+            $img = Image::make($image);
+    
+            // Redimensionner l'image à 650x350
+            $img->fit(650, 350, function ($constraint) {
+                $constraint->upsize(); // Permet d'agrandir les petites images
+            });
+    
+            // Sauvegarder l'image dans le dossier 'public/storage/images'
+            $img->save(public_path('storage/' . $imagePath));
+    
+            // Ajouter le chemin de la nouvelle image à l'array des données validées
+            $validatedData['image'] = $imagePath;
+    
+            // Supprimer l'ancienne image si elle existe
+            if ($produit->image && file_exists(public_path('storage/' . $produit->image))) {
+                unlink(public_path('storage/' . $produit->image)); // Supprimer l'ancienne image
+            }
+        }
+    
+        // Mettre à jour le produit avec les données validées (image incluse si modifiée)
+        $produit->update($validatedData);
+    
+        // Rediriger avec un message de succès
         return redirect()->route('produits.index')->with('success', 'Produit mis à jour avec succès.');
     }
+    
 
     public function destroy(Produit $produit)
     {

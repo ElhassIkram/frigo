@@ -68,12 +68,16 @@ Route::get('/reglements/{reglement}', [ReglementVendeurController::class, 'show'
 
 // Route pour supprimer un règlement existant
 Route::delete('/reglements/{reglementVendeur}', [ReglementVendeurController::class, 'destroy'])->name('reglements.destroy');
+
 Route::get('/users', [UserController::class, 'index'])->name('users.index'); // Afficher la liste des utilisateurs
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // Afficher le formulaire de création d'un utilisateur
 Route::post('/users', [UserController::class, 'store'])->name('users.store'); // Enregistrer un nouvel utilisateur
 Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); // Afficher le formulaire de modification d'un utilisateur
 Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update'); // Mettre à jour les informations d'un utilisateur
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // Supprimer un utilisateur
+Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+Route::post('/profile/image', [UserController::class, 'updateProfileImage'])->name('profile.updateImage');
+Route::post('/profile/password', [UserController::class, 'changePassword'])->name('profile.changePassword');
 
 // Route to list all familles
 Route::get('/familles', [FamilleController::class, 'index'])->name('familles.index');
