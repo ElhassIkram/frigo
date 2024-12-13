@@ -56,6 +56,7 @@
 
                             <!-- Bouton de soumission -->
                             <button type="submit" class="btn btn-primary">Modifier</button>
+                            <a href="{{ route('produits.index') }}" class="btn btn-secondary">Retour </a>
                         </form>
                     </div>
                 </div>

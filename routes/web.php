@@ -47,8 +47,10 @@ Route::delete('reglements/{reglement}', [ReglementClientController::class, 'dest
 
 // Route pour afficher les règlements d'un client spécifique
 Route::get('clients/{client}/reglements', [ReglementClientController::class, 'showByClient'])->name('clients.reglements');
-
-Route::get('clients/{client}/reglements/create', [ReglementClientController::class, 'createByClient'])->name('clients.reglements.create');
+// Routes pour les clients
+Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+Route::get('/clients/{client}/addReglement', [ReglementClientController::class, 'createReglement'])->name('clients.addReglement');
+Route::post('/clients/{client}/storeReglement', [ReglementClientController::class, 'storeReglement'])->name('clients.storeReglement');
 
 
 

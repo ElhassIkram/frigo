@@ -15,10 +15,10 @@ class ConditionnementController extends Controller
      */
     public function index()
     {
-        $conditionnements = Conditionnement::all();
+        // Paginate the conditionnements and order them by 'created_at' in descending order
+        $conditionnements = Conditionnement::orderBy('created_at', 'desc')->paginate(10);
         return view('conditionnements.index', compact('conditionnements'));
     }
-
     /**
      * Show the form for creating a new resource.
      *

@@ -60,6 +60,7 @@
 
                         <div class="form-group mb-0">
                             <button type="submit" class="btn btn-primary">{{ __('Créer') }}</button>
+                            <a href="{{ route('produits.index') }}" class="btn btn-secondary">Retour </a>
                         </div>
                     </form>
                 </div>

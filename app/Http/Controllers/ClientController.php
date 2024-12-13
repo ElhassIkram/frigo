@@ -46,9 +46,16 @@ public function update(ClientRequest $request, Client $client)
     return redirect()->route('clients.index')->with('success', 'Client mis à jour avec succès.');
 }
 
-    public function destroy(Client $client)
-    {
+public function destroy(Client $client)
+{
+    try {
         $client->delete(); // Supprime le client de la base de données
         return redirect()->route('clients.index')->with('success', 'Client supprimé avec succès.'); // Redirige vers l'index des clients avec un message de succès
+    } catch (\Exception $e) {
+        // Log the error for debugging purposes
+        \Log::error('Erreur lors de la suppression du client: ' . $e->getMessage());
+        return redirect()->route('clients.index')->with('error', 'Erreur lors de la suppression du client.'); // Message d'erreur en cas de problème
     }
+}
+
 }

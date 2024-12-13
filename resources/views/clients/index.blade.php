@@ -12,10 +12,9 @@
                 <div class="card-body">
                     <a href="{{ route('clients.create') }}" class="btn btn-primary mb-3">Ajouter un Client</a>
                 
-                    <table class="table table-striped">
+                    <table class="table table-striped table-sm">
                         <thead>
                             <tr>
-                               
                                 <th>Nom</th>
                                 <th>Prénom</th>
                                 <th>Adresse</th>
@@ -53,7 +52,10 @@
                                         <a href="{{ route('clients.reglements', $client->id) }}" class="btn btn-secondary btn-sm" title="Règlements">
                                             <i class="fa fa-credit-card"></i> 
                                         </a>
-
+                                            <!-- Lien Ajouter un Règlement par id -->
+                                            <a href="{{ route('clients.addReglement', $client->id) }}" class="btn btn-success btn-sm" title="Ajouter un Règlement">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
                                         <!-- Icône Supprimer -->
                                         <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display: inline-block;">
                                             @csrf

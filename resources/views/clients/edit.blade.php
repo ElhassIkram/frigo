@@ -101,6 +101,7 @@
 
 
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <a href="{{ route('clients.index') }}" class="btn btn-secondary">Retour </a>
                     </form>
                 </div>
             </div>
