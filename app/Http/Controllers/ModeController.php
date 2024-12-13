@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mode;
 use Illuminate\Http\Request;
+use App\Http\Requests\ModeRequest;
 
 class ModeController extends Controller
 {
@@ -18,9 +19,9 @@ class ModeController extends Controller
         return view('modes.create');
     }
 
-    public function store(Request $request)
+    public function store(ModeRequest $request) // Use ModeRequest for validation
     {
-        Mode::create($request->all());
+        Mode::create($request->validated()); // Only use validated data
         return redirect()->route('modes.index')->with('success', 'Mode ajouté avec succès.');
     }
     public function show(Mode $mode)
@@ -34,9 +35,9 @@ class ModeController extends Controller
         return view('modes.edit', compact('mode'));
     }
 
-    public function update(Request $request, Mode $mode)
+    public function update(ModeRequest $request, Mode $mode) // Use ModeRequest for validation
     {
-        $mode->update($request->all());
+        $mode->update($request->validated()); // Only use validated data
         return redirect()->route('modes.index')->with('success', 'Mode mis à jour avec succès.');
     }
 

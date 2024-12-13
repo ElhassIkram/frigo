@@ -14,7 +14,7 @@
 
                         <div class="form-group">
                             <label for="mode">{{ __('Mode') }}</label>
-                            <input id="mode" type="text" class="form-control @error('mode') is-invalid @enderror" name="mode" value="{{ old('mode', $mode->mode) }}" required autofocus>
+                            <input id="mode" type="text" class="form-control @error('mode') is-invalid @enderror" value="{{ old('mode', $mode->mode) }}" name="mode"   autofocus>
 
                             @error('mode')
                                 <span class="invalid-feedback" role="alert">

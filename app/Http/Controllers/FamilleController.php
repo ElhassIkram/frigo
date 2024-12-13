@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Famille;
 use Illuminate\Http\Request;
+use App\Http\Requests\FamilleRequest;
 
 class FamilleController extends Controller
 {
@@ -18,9 +19,9 @@ class FamilleController extends Controller
         return view('familles.create');
     }
 
-    public function store(Request $request)
+    public function store(FamilleRequest $request)
     {
-        Famille::create($request->all());
+        Famille::create($request->validated());
         return redirect()->route('familles.index')->with('success', 'Famille ajoutée avec succès.');
     }
 
@@ -33,14 +34,10 @@ class FamilleController extends Controller
     {
         return view('familles.edit', compact('famille'));
     }
-    public function update(Request $request, Famille $famille)
+    
+    public function update(FamilleRequest $request, Famille $famille)
     {
-        $request->validate([
-            'famille' => 'required|string|max:255',
-        ]);
-    
-        $famille->update($request->all());
-    
+        $famille->update($request->validated());
         return redirect()->route('familles.index')->with('success', 'Famille mise à jour avec succès.');
     }
 

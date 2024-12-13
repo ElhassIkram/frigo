@@ -8,6 +8,15 @@
                 <div class="card-header">{{ __('Modifier la Famille') }}</div>
 
                 <div class="card-body">
+                @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form method="POST" action="{{ route('familles.update', $famille->id) }}">
                         @csrf
                         @method('PUT')
@@ -18,14 +27,9 @@
                             <input id="famille" type="text" 
                                    class="form-control @error('famille') is-invalid @enderror" 
                                    name="famille" 
-                                   value="{{ old('famille', $famille->famille) }}" 
-                                   required autofocus>
+                                   value="{{ old('famille', $famille->famille) }}"  autofocus>
                             
-                            @error('famille')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                          
                         </div>
 
                         <!-- Boutons d'action -->

@@ -16,7 +16,7 @@
                             <!-- Désignation du produit -->
                             <div class="form-group">
                                 <label for="designation">Désignation</label>
-                                <input type="text" class="form-control" id="designation" name="designation" value="{{ old('designation', $produit->designation) }}" required>
+                                <input type="text" class="form-control" id="designation" name="designation" value="{{ old('designation', $produit->designation) }}" >
                                 @error('designation')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror

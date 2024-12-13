@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Conditionnement;
 use Illuminate\Http\Request;
+use App\Http\Requests\ConditionnementRequest;
 
 class ConditionnementController extends Controller
 {
@@ -34,13 +35,9 @@ class ConditionnementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ConditionnementRequest $request)
     {
-        $request->validate([
-            'conditionnement' => 'required|string|max:255',
-        ]);
-
-        Conditionnement::create($request->all());
+        Conditionnement::create($request->validated());
         return redirect()->route('conditionnements.index')->with('success', 'Conditionnement créé avec succès.');
     }
 
@@ -73,15 +70,12 @@ class ConditionnementController extends Controller
      * @param  \App\Models\Conditionnement  $conditionnement
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Conditionnement $conditionnement)
-    {
-        $request->validate([
-            'conditionnement' => 'required|string|max:255',
-        ]);
-
-        $conditionnement->update($request->all());
-        return redirect()->route('conditionnements.index')->with('success', 'Conditionnement mis à jour avec succès.');
-    }
+ // Méthode update
+public function update(ConditionnementRequest $request, Conditionnement $conditionnement)
+{
+    $conditionnement->update($request->validated());
+    return redirect()->route('conditionnements.index')->with('success', 'Conditionnement mis à jour avec succès.');
+}
 
     /**
      * Remove the specified resource from storage.

@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Vendeur;
 use Illuminate\Http\Request;
+use App\Http\Requests\ClientRequest;
 
 class ClientController extends Controller
 {
     public function index()
     {
-        $clients = Client::all(); // Récupère tous les clients depuis la base de données
-        return view('clients.index', compact('clients')); // Passe les clients à la vue 'clients.index'
-    }
+        $clients = Client::orderBy('created_at', 'desc')->paginate(10); // Orders clients by 'created_at' in descending order and paginates the results
+    return view('clients.index', compact('clients')); // Pass the clients to the 'clients.index' view
+   }
    
     public function create()
     {
@@ -25,45 +26,25 @@ public function show(Client $client)
     return view('clients.show', compact('client')); // Retourne la vue 'clients.show' en passant le client à afficher
 }
 
-    public function store(Request $request)
-    {
-        $request->validate([ // Valide les données du formulaire
-            'nom' => 'required|string',
-            'prenom' => 'required|string',
-            'adresse' => 'required|string',
-            'ville' => 'required|string',
-            'tell' => 'required|string',
-            'email' => 'required|email|unique:clients,email',
-            'password' => 'required|string',
-            'vendeur_id' => 'required|exists:vendeurs,id',
-        ]);
-
-        Client::create($request->all()); // Crée un nouveau client avec les données de la requête
-        return redirect()->route('clients.index')->with('success', 'Client ajouté avec succès.'); // Redirige vers l'index des clients avec un message de succès
-    }
-
-    public function edit(Client $client)
+public function store(ClientRequest $request)
 {
-    return view('clients.edit', compact('client'));
+    Client::create($request->validated());
+    return redirect()->route('clients.index')->with('success', 'Client ajouté avec succès.');
+}
+public function edit(Client $client)
+{
+    // Fetch all vendeurs to display in the dropdown
+    $vendeurs = Vendeur::all();
+    
+    return view('clients.edit', compact('client', 'vendeurs'));
 }
 
 
-    public function update(Request $request, Client $client)
-    {
-        $request->validate([ // Valide les données du formulaire
-            'nom' => 'required|string',
-            'prenom' => 'required|string',
-            'adresse' => 'required|string',
-            'ville' => 'required|string',
-            'tell' => 'required|string',
-            'email' => 'required|email|unique:clients,email,'.$client->id, // Vérifie l'unicité de l'email en excluant le client actuel
-            'password' => 'nullable|string', // Le mot de passe est facultatif lors de la mise à jour
-            'vendeur_id' => 'required|exists:vendeurs,id',
-        ]);
-
-        $client->update($request->all()); // Met à jour les données du client avec les données de la requête
-        return redirect()->route('clients.index')->with('success', 'Client mis à jour avec succès.'); // Redirige vers l'index des clients avec un message de succès
-    }
+public function update(ClientRequest $request, Client $client)
+{
+    $client->update($request->validated());
+    return redirect()->route('clients.index')->with('success', 'Client mis à jour avec succès.');
+}
 
     public function destroy(Client $client)
     {

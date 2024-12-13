@@ -14,7 +14,7 @@
 
                         <div class="form-group">
                             <label for="nom">Nom</label>
-                            <input id="nom" type="text" class="form-control @error('nom') is-invalid @enderror" name="nom" value="{{ old('nom', $client->nom) }}" required autofocus>
+                            <input id="nom" type="text" class="form-control @error('nom') is-invalid @enderror" name="nom" value="{{ old('nom', $client->nom) }}"  autofocus>
                             @error('nom')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -24,7 +24,7 @@
 
                         <div class="form-group">
                             <label for="prenom">Prénom</label>
-                            <input id="prenom" type="text" class="form-control @error('prenom') is-invalid @enderror" name="prenom" value="{{ old('prenom', $client->prenom) }}" required>
+                            <input id="prenom" type="text" class="form-control @error('prenom') is-invalid @enderror" name="prenom" value="{{ old('prenom', $client->prenom) }}" >
                             @error('prenom')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -34,7 +34,7 @@
 
                         <div class="form-group">
                             <label for="adresse">Adresse</label>
-                            <input id="adresse" type="text" class="form-control @error('adresse') is-invalid @enderror" name="adresse" value="{{ old('adresse', $client->adresse) }}" required>
+                            <input id="adresse" type="text" class="form-control @error('adresse') is-invalid @enderror" name="adresse" value="{{ old('adresse', $client->adresse) }}" >
                             @error('adresse')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -44,7 +44,7 @@
 
                         <div class="form-group">
                             <label for="ville">Ville</label>
-                            <input id="ville" type="text" class="form-control @error('ville') is-invalid @enderror" name="ville" value="{{ old('ville', $client->ville) }}" required>
+                            <input id="ville" type="text" class="form-control @error('ville') is-invalid @enderror" name="ville" value="{{ old('ville', $client->ville) }}" >
                             @error('ville')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -54,7 +54,7 @@
 
                         <div class="form-group">
                             <label for="tell">Téléphone</label>
-                            <input id="tell" type="text" class="form-control @error('tell') is-invalid @enderror" name="tell" value="{{ old('tell', $client->tell) }}" required>
+                            <input id="tell" type="text" class="form-control @error('tell') is-invalid @enderror" name="tell" value="{{ old('tell', $client->tell) }}" >
                             @error('tell')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -64,7 +64,7 @@
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $client->email) }}" required>
+                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $client->email) }}" >
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -74,7 +74,7 @@
 
                         <div class="form-group">
                             <label for="password">Mot de passe</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" >
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -83,14 +83,22 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="vendeur_id">ID du Vendeur</label>
-                            <input id="vendeur_id" type="text" class="form-control @error('vendeur_id') is-invalid @enderror" name="vendeur_id" value="{{ old('vendeur_id', $client->vendeur_id) }}" required>
-                            @error('vendeur_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+    <label for="vendeur_id">Vendeur</label>
+    <select id="vendeur_id" class="form-control @error('vendeur_id') is-invalid @enderror" name="vendeur_id">
+        <option value="">Choisir un vendeur</option>
+        @foreach($vendeurs as $vendeur)
+            <option value="{{ $vendeur->id }}" {{ old('vendeur_id', $client->vendeur_id) == $vendeur->id ? 'selected' : '' }}>
+                {{ $vendeur->nom }} {{ $vendeur->prenom }}
+            </option>
+        @endforeach
+    </select>
+    @error('vendeur_id')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+    @enderror
+</div>
+
 
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
                     </form>

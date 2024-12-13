@@ -31,13 +31,9 @@
 
                         <div class="form-group">
                             <label for="famille">{{ __('Nom de la famille') }}</label>
-                            <input id="famille" type="text" class="form-control @error('famille') is-invalid @enderror" name="famille" value="{{ old('famille') }}" required autofocus>
+                            <input id="famille" type="text" class="form-control @error('famille') is-invalid @enderror" name="famille" value="{{ old('famille') }}"  autofocus>
 
-                            @error('famille')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                           
                         </div>
 
                         <div class="form-group mb-0">
