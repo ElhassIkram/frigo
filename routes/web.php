@@ -33,20 +33,22 @@ Route::get('reglements/create', [ReglementClientController::class, 'create'])->n
 Route::post('clients/{clientId}/reglements', [ReglementClientController::class, 'store'])->name('reglements.store');
 
 
-// Route pour afficher les détails d'un règlement spécifique
-Route::get('reglements/{reglement}', [ReglementClientController::class, 'show'])->name('reglements.show');
+
 
 // Route pour afficher le formulaire d'édition d'un règlement
-Route::get('reglements/{reglement}/edit', [ReglementClientController::class, 'edit'])->name('reglements.edit');
+Route::get('/clients/{clientId}/reglements/{reglementId}/edit', [ReglementClientController::class, 'edit']) ->name('reglements.edit');
 
 // Route pour mettre à jour un règlement existant
-Route::put('reglements/{reglement}', [ReglementClientController::class, 'update'])->name('reglements.update');
-
+Route::put('/clients/{clientId}/reglements/{reglementId}', [ReglementClientController::class, 'update'])
+     ->name('reglements.update');
 // Route pour supprimer un règlement
-Route::delete('reglements/{reglement}', [ReglementClientController::class, 'destroy'])->name('reglements.destroy');
+
+Route::delete('/clientsReglements/{reglementId}', [ReglementClientController::class, 'destroy'])->name('reglements.destroy');
+
 
 // Route pour afficher les règlements d'un client spécifique
-Route::get('clients/{client}/reglements', [ReglementClientController::class, 'showByClient'])->name('clients.reglements');
+Route::get('/clients/{client}/reglements', [ReglementClientController::class, 'showByClient'])->name('clients.reglements');
+
 // Routes pour les clients
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 Route::get('/clients/{client}/addReglement', [ReglementClientController::class, 'createReglement'])->name('clients.addReglement');
@@ -55,21 +57,21 @@ Route::post('/clients/{client}/storeReglement', [ReglementClientController::clas
 
 
 
-Route::get('/reglements', [ReglementVendeurController::class, 'index'])->name('reglements.index');
 
-Route::get('/vendeurs/{vendeurId}/reglements', [ReglementVendeurController::class, 'showReglements'])->name('vendeurs.reglements');
+Route::get('/vendeurs/{vendeurId}/reglements', [ReglementVendeurController::class, 'showByVendeur'])->name('vendeurs.reglements');
 
-Route::get('/vendeurs/{vendeurId}/reglements/create', [ReglementVendeurController::class, 'createReglement'])->name('vendeurs.reglements.create');
+
+Route::get('/vendeurs/{vendeurId}/reglements/create', [ReglementVendeurController::class, 'create'])->name('vendeurs.reglements.create');
 
 Route::post('/vendeurs/{vendeurId}/reglements', [ReglementVendeurController::class, 'storeReglement'])->name('vendeurs.reglements.store');
+Route::get('/vendeurs/{vendeurId}/reglements/{reglementId}/edit', [ReglementVendeurController::class, 'edit'])->name('vendeurs.reglements.edit');
 
-Route::get('/reglements/{reglementVendeur}/edit', [ReglementVendeurController::class, 'edit'])->name('reglements.edit');
-
-Route::put('/reglements/{reglementVendeur}', [ReglementVendeurController::class, 'update'])->name('reglements.update');
-Route::get('/reglements/{reglement}', [ReglementVendeurController::class, 'show'])->name('reglements.show');
-
+Route::put('/vendeurs/{vendeurId}/reglements/{reglementId}', [ReglementVendeurController::class, 'updateReglement'])->name('vendeurs.reglements.update');
 // Route pour supprimer un règlement existant
-Route::delete('/reglements/{reglementVendeur}', [ReglementVendeurController::class, 'destroy'])->name('reglements.destroy');
+Route::delete('/vendeursReglements/{reglementId}', [ReglementVendeurController::class, 'destroy'])->name('vendeurs.reglements.destroy');
+
+
+
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index'); // Afficher la liste des utilisateurs
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // Afficher le formulaire de création d'un utilisateur

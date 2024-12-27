@@ -6,134 +6,132 @@ use App\Models\ReglementVendeur;
 use App\Models\Mode;
 use App\Models\Vendeur;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReglementVendeurRequest;
 
 class ReglementVendeurController extends Controller
 {
-    /**
-     * Afficher une liste des règlements pour tous les vendeurs.
-     */
-    public function index()
+    // Affiche les règlements pour un vendeur donné
+    public function showByVendeur($vendeurId)
     {
-        $reglements = ReglementVendeur::with(['mode', 'vendeur'])->get();
-        return view('reglement_vendeurs.index', compact('reglements'));
-    }
-    public function show($id)
-    {
-        $reglement = ReglementVendeur::find($id); // Récupérer le règlement en fonction de l'ID
-        $vendeur = Vendeur::find($reglement->vendeur_id); // Récupérer le vendeur associé à ce règlement
-    
-        return view('reglement_vendeurs.show', compact('vendeur', 'reglement'));
-    }
-    /**
-     * Afficher les règlements pour un vendeur spécifique.
-     *
-     * @param int $vendeurId
-     * @return \Illuminate\View\View
-     */
-    public function showReglements($vendeurId)
-    {
+        // Récupérer le vendeur
         $vendeur = Vendeur::findOrFail($vendeurId);
-        $reglements = ReglementVendeur::where('vendeur_id', $vendeurId)->with('mode')->get();
+        
+        // Récupérer tous les règlements pour ce vendeur
+        $reglements = ReglementVendeur::where('vendeur_id', $vendeurId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        
+        // Calculer le total des montants
         $totalMontant = $reglements->sum('montant');
-
+    
+        // Passer les données à la vue
         return view('reglement_vendeurs.index', compact('vendeur', 'reglements', 'totalMontant'));
     }
-
-    /**
-     * Afficher le formulaire de création d'un nouveau règlement pour un vendeur spécifique.
-     *
-     * @param int $vendeurId
-     * @return \Illuminate\View\View
-     */
-    public function createReglement($vendeurId)
-    {
-        $vendeur = Vendeur::findOrFail($vendeurId);
-        $modes = Mode::all();
-        $reglements = ReglementVendeur::where('vendeur_id', $vendeurId)->get();
-        $totalMontant = $reglements->sum('montant');
-
-        return view('reglement_vendeurs.create', compact('vendeur', 'modes', 'totalMontant'));
-    }
-
-    /**
-     * Enregistrer un nouveau règlement pour un vendeur spécifique.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $vendeurId
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function storeReglement(Request $request, $vendeurId)
-    {
-        $validated = $request->validate([
-            'date' => 'required|date',
-            'montant' => 'required|numeric',
-            'observation' => 'nullable|string',
-            'mode_id' => 'required|exists:modes,id',
-        ]);
-
-        $validated['vendeur_id'] = $vendeurId;
-        ReglementVendeur::create($validated);
-
-        return redirect()->route('vendeurs.reglements', $vendeurId)->with('success', 'Règlement ajouté avec succès.');
-    }
-
-    public function edit($id)
-    {
-        $reglement = ReglementVendeur::find($id);
     
-        if (!$reglement) {
-            return redirect()->route('vendeurs.reglements')->with('error', 'Règlement introuvable.');
+
+    // Affiche le formulaire de création d'un règlement pour un vendeur
+    public function create($vendeurId)
+    {
+        $vendeur = Vendeur::findOrFail($vendeurId); // Récupère le vendeur par son ID
+        $modes = Mode::all(); // Récupère tous les modes de paiement disponibles
+
+        return view('reglement_vendeurs.create', compact('vendeur', 'modes'));
+    }
+
+    // Enregistre un règlement pour un vendeur
+    public function storeReglement(ReglementVendeurRequest $request, $vendeurId)
+    {
+        try {
+            // Vérifier l'existence du vendeur
+            $vendeur = Vendeur::findOrFail($vendeurId);
+    
+            // Créer un nouveau règlement pour le vendeur
+            ReglementVendeur::create([
+                'vendeur_id' => $vendeur->id,
+                'date' => $request->validated('date'),
+                'montant' => $request->validated('montant'),
+                'mode_id' => $request->validated('mode_id'),
+                'observation' => $request->validated('observation'),
+            ]);
+    
+            // Redirection vers la route affichant les règlements du vendeur
+            return redirect()
+                ->route('vendeurs.reglements', ['vendeurId' => $vendeur->id])
+                ->with('success', 'Règlement ajouté avec succès.');
+        } catch (\Exception $e) {
+            // Gestion des erreurs
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors(['error' => 'Erreur lors de l\'ajout du règlement : ' . $e->getMessage()]);
         }
-        $vendeur = Vendeur::find($reglement->vendeur_id);
-        $modes = Mode::all(); 
-    
-        return view('reglement_vendeurs.edit', compact('reglement', 'modes','vendeur'));
     }
     
 
-    /**
-     * Mettre à jour un règlement existant dans la base de données.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\ReglementVendeur $reglementVendeur
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, $id)
+    // Affiche le formulaire d'édition d'un règlement
+    public function edit($vendeurId, $reglementId)
     {
-        $request->validate([
-            'date' => 'required|date',
-            'montant' => 'required|numeric',
-            'observation' => 'nullable|string',
-            'mode_id' => 'required|exists:modes,id',
-        ]);
-    
-        $reglement = ReglementVendeur::findOrFail($id); // Récupérer le règlement à mettre à jour
-    
-        $reglement->date = $request->input('date');
-        $reglement->montant = $request->input('montant');
-        $reglement->observation = $request->input('observation');
-        $reglement->mode_id = $request->input('mode_id');
-    
-        $reglement->save();
-    
-        return redirect()->route('vendeurs.reglements', ['vendeurId' => $reglement->vendeur_id])->with('success', 'Le règlement a été mis à jour avec succès.');
-    }
-    
-    
-    /**
-     * Supprimer un règlement de la base de données.
-     *
-     * @param \App\Models\ReglementVendeur $reglementVendeur
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(ReglementVendeur $reglementVendeur)
-    {
-        $vendeurId = $reglementVendeur->vendeur_id;
-        $reglementVendeur->delete();
+        $vendeur = Vendeur::findOrFail($vendeurId); // Récupère le vendeur par ID
+        $reglement = ReglementVendeur::where('vendeur_id', $vendeurId)
+                                     ->where('id', $reglementId)
+                                     ->firstOrFail(); // Récupère le règlement par son ID
+        $modes = Mode::all(); // Récupère tous les modes de paiement disponibles
 
-        return redirect()->route('vendeurs.reglements', $vendeurId)->with('success', 'Règlement supprimé avec succès.');
+        return view('reglement_vendeurs.edit', compact('vendeur', 'reglement', 'modes'));
+    }
+
+    // Met à jour un règlement pour un vendeur
+    public function updateReglement(ReglementVendeurRequest $request, $vendeurId, $reglementId)
+    {
+        try {
+            // Récupérer le règlement à mettre à jour
+            $reglement = ReglementVendeur::where('vendeur_id', $vendeurId)
+                                         ->where('id', $reglementId)
+                                         ->firstOrFail();
+    
+            // Mise à jour des informations du règlement
+            $reglement->update([
+                'date' => $request->validated('date'),
+                'montant' => $request->validated('montant'),
+                'mode_id' => $request->validated('mode_id'),
+                'observation' => $request->validated('observation'),
+            ]);
+    
+            // Redirection vers la route affichant les règlements du vendeur
+            return redirect()
+                ->route('vendeurs.reglements', ['vendeurId' => $vendeurId])
+                ->with('success', 'Règlement mis à jour avec succès.');
+        } catch (\Exception $e) {
+            // Gestion des erreurs
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Erreur lors de la mise à jour : ' . $e->getMessage()]);
+        }
     }
     
+    // Supprime un règlement spécifique pour un vendeur donné
+// Supprime un règlement spécifique pour un vendeur donné
+// Supprime un règlement spécifique pour un client donné
+// Supprime un règlement spécifique pour un vendeur donné
+public function destroy($reglementId)
+{
+    try {
+        // Récupérer le règlement avec l'ID fourni
+        $reglement = ReglementVendeur::findOrFail($reglementId);
+
+        // Supprimer le règlement
+        $reglement->delete();
+
+        // Rediriger avec un message de succès vers la page des règlements du vendeur
+        return redirect()->route('vendeurs.reglements', ['vendeurId' => $reglement->vendeur_id])
+                         ->with('success', 'Règlement supprimé avec succès.');
+    } catch (\Exception $e) {
+        // Gérer les erreurs et rediriger avec un message d'erreur
+        return redirect()->route('vendeurs.reglements', ['vendeurId' => $reglement->vendeur_id])
+                         ->with('error', 'Erreur lors de la suppression du règlement: ' . $e->getMessage());
+    }
 }
 
 
+
+}

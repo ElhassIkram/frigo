@@ -6,28 +6,17 @@ use App\Models\ReglementClient;
 use App\Models\Mode;
 use App\Models\Client;
 use Illuminate\Http\Request;
-use App\Http\Requests\ReglementRequest;
+use App\Http\Requests\ReglementClientRequest;
 
 class ReglementClientController extends Controller
 {
-    public function index()
-    {
-        $reglements = ReglementClient::all();
-        return view('reglements.index', compact('reglements'));
-    }
-
-    // public function create()
-    // {
-    //     return view('reglements.create');
-    // }
-
-
     public function showByClient($clientId)
     {
         $client = Client::findOrFail($clientId);
         $mode = Mode::all(); 
 
-        $reglements = ReglementClient::where('client_id', $clientId)->paginate(10); // Utilisez la pagination
+        $reglements = ReglementClient::where('client_id', $clientId)
+        ->orderBy('created_at', 'desc')->paginate(10); // Utilisez la pagination
 
         return view('reglements.show_by_client', compact('client', 'reglements', 'mode'));
     }
@@ -40,38 +29,105 @@ class ReglementClientController extends Controller
 }
 
 
-public function storeReglement(ReglementRequest $request, $clientId)
+public function storeReglement(ReglementClientRequest $request, $clientId)
 {
-    ReglementClient::create([
-        'client_id' => $clientId,
-        'mode_id' => $request->mode_id,
-        'montant' => $request->montant,
-        'date' => $request->date,
-        'observation' => $request->observation, // Valeur fournie ou NULL si vide
-    ]);
+    try {
+        // Vérifier l'existence du client
+        $client = Client::findOrFail($clientId);
 
-    return redirect()->route('clients.index')->with('success', 'Règlement ajouté avec succès.');
+        // Créer un nouveau règlement
+        ReglementClient::create([
+            'client_id' => $client->id, // ID du client
+            'date' => $request->input('date'), // Récupère la date validée
+            'montant' => $request->input('montant'), // Récupère le montant validé
+            'mode_id' => $request->input('mode_id'), // Récupère le mode de paiement validé
+            'observation' => $request->input('observation'), // Observation facultative
+        ]);
+
+        // Rediriger avec un message de succès
+        return redirect()
+            ->route('clients.reglements', $client->id)
+            ->with('success', 'Règlement ajouté avec succès.');
+
+    } catch (\Exception $e) {
+        // Gérer les erreurs inattendues
+        return redirect()
+            ->back()
+            ->withInput($request->all()) // Garder les données saisies
+            ->withErrors(['error' => 'Erreur lors de l\'ajout du règlement : ' . $e->getMessage()]);
+    }
 }
 
 
 
 
-    public function edit(ReglementClient $reglement)
-    {
-        return view('reglements.edit', compact('reglement'));
+public function edit($clientId, $reglementId)
+{
+    $client = Client::findOrFail($clientId); // Récupère le client par ID
+    $reglement = ReglementClient::where('client_id', $clientId)
+                                ->where('id', $reglementId)
+                                ->firstOrFail(); // Récupère le règlement par son ID
+    $modes = Mode::all(); // Récupère tous les modes de paiement
+
+    return view('reglements.edit', compact('client', 'reglement', 'modes'));
+}
+
+public function update(ReglementClientRequest $request, $clientId, $reglementId)
+{
+    try {
+        // Vérifier l'existence du client et du règlement
+        $client = Client::findOrFail($clientId);
+        $reglement = ReglementClient::where('client_id', $clientId)
+                                    ->where('id', $reglementId)
+                                    ->firstOrFail();
+
+        // Mettre à jour les données du règlement
+        $reglement->update([
+            'date' => $request->input('date'), // Mettre à jour la date
+            'montant' => $request->input('montant'), // Mettre à jour le montant
+            'mode_id' => $request->input('mode_id'), // Mettre à jour le mode de paiement
+            'observation' => $request->input('observation'), // Mettre à jour l'observation
+        ]);
+
+        // Rediriger avec un message de succès
+        return redirect()
+            ->route('clients.reglements', $client->id)
+            ->with('success', 'Règlement mis à jour avec succès.');
+    } catch (\Exception $e) {
+        // Gérer les erreurs inattendues
+        return redirect()
+            ->back()
+            ->withInput($request->all()) // Garder les données saisies
+            ->withErrors(['error' => 'Erreur lors de la mise à jour du règlement : ' . $e->getMessage()]);
     }
+}
 
-    // public function update(ReglementRequest $request, ReglementClient $reglement)
-    // {
-    //     $reglement->update($request->validated());
-    
-    //     return redirect()->route('reglements.index')->with('success', 'Règlement client mis à jour avec succès.');
-    // }
-    
 
-    public function destroy(ReglementClient $reglement)
-    {
+
+// Supprime un règlement spécifique pour un client donné
+public function destroy($reglementId)
+{
+    try {
+        // Récupérer le règlement avec l'ID fourni
+        $reglement = ReglementClient::findOrFail($reglementId);
+
+        // Supprimer le règlement
         $reglement->delete();
-        return redirect()->route('reglements.index')->with('success', 'Règlement client supprimé avec succès.');
+
+        // Rediriger avec un message de succès vers la page des règlements du client
+        return redirect()->route('clients.reglements', ['client' => $reglement->client_id])
+                         ->with('success', 'Règlement supprimé avec succès.');
+    } catch (\Exception $e) {
+        // Gérer les erreurs et rediriger avec un message d'erreur
+        return redirect()->route('clients.reglements')
+                         ->with('error', 'Erreur lors de la suppression du règlement: ' . $e->getMessage());
     }
 }
+
+
+
+
+
+
+}
+

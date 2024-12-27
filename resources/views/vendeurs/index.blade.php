@@ -9,7 +9,9 @@
                         <h1>Liste des Vendeurs</h1>
                     </div>
                     <div class="card-body">
-                        <a href="{{ route('vendeurs.create') }}" class="btn btn-primary float-right">Ajouter un vendeur</a>
+                        <a href="{{ route('vendeurs.create') }}" class="btn btn-primary float-right">
+                            <i class="fa fa-plus"></i> Ajouter un vendeur
+                        </a>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -32,16 +34,33 @@
                                         <td>{{ $vendeur->tell }}</td>
                                         <td>{{ $vendeur->email }}</td>
                                         <td>
-                                            <a href="{{ route('vendeurs.show', $vendeur->id) }}" class="btn btn-info">Voir</a>
-                                            <a href="{{ route('vendeurs.edit', $vendeur->id) }}" class="btn btn-primary">Modifier</a>
-                                            <a href="{{ route('vendeurs.reglements', $vendeur->id) }}" class="btn btn-warning"> Règ</a>
-                                            
+                                            <!-- Bouton Voir -->
+                                            <!-- <a href="{{ route('vendeurs.show', $vendeur->id) }}" class="btn btn-info btn-sm" title="Voir">
+                                                <i class="fa fa-eye"></i>
+                                            </a> -->
+
+                                            <!-- Bouton Modifier -->
+                                            <a href="{{ route('vendeurs.edit', $vendeur->id) }}" class="btn btn-primary btn-sm" title="Modifier">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <!-- Bouton Règlements -->
+                                            <a href="{{ route('vendeurs.reglements', $vendeur->id) }}" class="btn btn-secondary btn-sm" title="Règlements">
+                                            <i class="fa fa-credit-card"></i>
+                                            </a>
+                                            <a href="{{ route('vendeurs.reglements.create', $vendeur->id) }}" class="btn btn-success btn-sm"    title="Ajouter un Règlement">
+                                            <i class="fa fa-plus"></i>
+                                            </a>
+                         
+                                            <!-- Bouton Supprimer -->
                                             <form action="{{ route('vendeurs.destroy', $vendeur->id) }}" method="POST" style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce vendeur?')" title="Supprimer">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
                                             </form>
-                                             </td>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -10,14 +10,12 @@
                 </div>
                 
                 <div class="card-body">
-                    
-                    <a href="{{ route('clients.index') }}" class="btn btn-secondary">Retour </a>
-                    <!-- Lien Ajouter un Règlement par id -->
-                    <a href="{{ route('clients.addReglement', $client->id) }}" class="btn btn-primary " title="Ajouter un Règlement">
-                                                    <i class="fa fa-plus"></i>Ajouter Règlement
-                                                </a>
-                
-                    <table class="table table-striped">
+                    <a href="{{ route('clients.index') }}" class="btn btn-secondary">Retour</a>
+                    <a href="{{ route('clients.addReglement', $client->id) }}" class="btn btn-primary" title="Ajouter un Règlement">
+                        <i class="fa fa-plus"></i> Ajouter Règlement
+                    </a>
+
+                    <table class="table table-striped mt-3">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -32,31 +30,32 @@
                             @foreach ($reglements as $reglement)
                                 <tr>
                                     <td>{{ $reglement->id }}</td>
-                                    <td>{{ $reglement->montant }}</td>
+                                    <td>{{ number_format($reglement->montant, 2) }} DH</td>
                                     <td>{{ $reglement->date }}</td>
                                     <td>{{ $reglement->mode->mode }}</td>
-                                    <td>{{ $reglement->observation ?? 'Aucune observation' }}</td> <!-- Affiche 'Aucune observation' si vide -->
+                                    <td>{{ $reglement->observation ?? 'Aucune observation' }}</td>
                                     <td>
-                                        <!-- Modifier avec icône -->
-                                        <a href="{{ route('reglements.edit', $reglement->id) }}" class="btn btn-sm btn-success" title="Modifier">
+                                        <a href="{{ route('reglements.edit', ['clientId' => $client->id, 'reglementId' => $reglement->id]) }}" class="btn btn-sm btn-success" title="Modifier">
                                             <i class="fa fa-edit"></i>
                                         </a>
+                                        <form action="{{ route('reglements.destroy', $reglement->id) }}" method="POST" style="display: inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce règlement?')" title="Supprimer">
+        <i class="fa fa-trash"></i>
+    </button>
+</form>
 
-                                        <!-- Supprimer avec icône -->
-                                        <form action="{{ route('reglements.destroy', $reglement->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce règlement ?')" title="Supprimer">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                  
-
+                    
+                    <!-- Pagination links -->
+                    <div class="d-flex justify-content-center">
+                        {{ $reglements->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
             </div>
         </div>

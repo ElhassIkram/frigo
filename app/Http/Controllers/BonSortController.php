@@ -41,6 +41,28 @@ class BonSortController extends Controller
         return redirect()->route('bonsorts.index')->with('success', 'Bon de sortie ajouté avec succès.');
     }
 
+    // public function store(StoreBonSortRequest $request)
+    // {
+    //     // La validation est déjà effectuée grâce à StoreBonSortRequest
+    
+    //     // Création du bon de sortie avec les données validées
+    //     $bonSort = BonSort::create($request->only(['date', 'observation', 'vendeur_id']));
+    
+    //     // Création des détails du bon de sortie
+    //     foreach ($request->input('details') as $detail) {
+    //         DetailBonSort::create([
+    //             'bon_sort_id' => $bonSort->id,
+    //             'conditionnement_id' => $detail['conditionnement_id'],
+    //             'produit_id' => $detail['produit_id'],
+    //             'qte' => $detail['qte'],
+    //         ]);
+    //     }
+    
+    //     // Redirection avec un message de succès
+    //     return redirect()->route('bonsorts.index')->with('success', 'Bon de sortie ajouté avec succès.');
+    // }
+    
+
     public function show(BonSort $bonSort)
     {
         return view('bonsorts.show', compact('bonSort'));
